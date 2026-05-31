@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>밤이 밀려온다 — b.am on 밤밀온</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --dark-red: #8B0000;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --mid: #1a1a1a;
+    --gray: #888;
+    --light-gray: #ccc;
+    --white: #f5f5f0;
+    --grain-opacity: 0.04;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+  }
+
+  .nav-logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.75rem;
+    color: var(--gray);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    font-family: 'IBM Plex Mono', monospace;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 70% 50%, rgba(139,0,0,0.08) 0%, transparent 70%),
+      linear-gradient(180deg, #0A0A0A 0%, #0f0f0f 100%);
+  }
+
+  .hero-bookshelf {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 45%;
+    background: linear-gradient(to right, transparent, rgba(10,10,10,0.7) 80%);
+    opacity: 0.3;
+    overflow: hidden;
+  }
+
+  .hero-bookshelf::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 12px,
+      rgba(255,255,255,0.03) 12px,
+      rgba(255,255,255,0.03) 14px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 48px,
+      rgba(255,255,255,0.05) 48px,
+      rgba(255,255,255,0.05) 50px
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .episode-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .episode-tag::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background: var(--red);
+    opacity: 0.5;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(3.5rem, 10vw, 7.5rem);
+    font-weight: 900;
+    color: var(--red);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 2.9em;
+    text-shadow: 0 0 30px rgba(192,57,43,0.35), 0 0 60px rgba(139,0,0,0.2);
+    transition: filter 0.55s ease, opacity 0.55s ease;
+  }
+
+  .hero-subtitle {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--gray);
+    margin-bottom: 3rem;
+    letter-spacing: 0.2em;
+  }
+
+  .hero-subtitle span {
+    color: var(--light-gray);
+    margin: 0 0.3em;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    border: 1px solid rgba(192,57,43,0.2);
+    background: rgba(192,57,43,0.04);
+  }
+
+  .meta-item label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.4rem;
+  }
+
+  .meta-item p {
+    font-size: 0.9rem;
+    color: var(--light-gray);
+    line-height: 1.5;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--dark-red);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--gray);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--white);
+    color: var(--white);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.3;
+    animation: float 2s ease-in-out infinite;
+  }
+
+  .scroll-hint span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: var(--gray);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ====== HERO HORROR / MOTION ====== */
+
+  /* "밤이 밀려온다" — 어둠이 오른쪽에서 밀려 들어온다 */
+  .hero-fog {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 100% at 110% 50%, rgba(0,0,0,0.95) 0%, rgba(10,10,10,0.6) 35%, transparent 65%);
+    animation: nightPush 9s ease-in-out infinite;
+  }
+
+  @keyframes nightPush {
+    0%, 100% { transform: translateX(10%); opacity: 0.4; }
+    50%      { transform: translateX(-6%); opacity: 0.85; }
+  }
+
+  /* 숨 쉬는 듯한 비네트 — 가장자리 어둠 */
+  .hero-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: inset 0 0 180px 50px rgba(0,0,0,0.85);
+    animation: vignettePulse 5s ease-in-out infinite;
+  }
+
+  @keyframes vignettePulse {
+    0%, 100% { box-shadow: inset 0 0 170px 45px rgba(0,0,0,0.8); }
+    50%      { box-shadow: inset 0 0 280px 95px rgba(0,0,0,0.96); }
+  }
+
+  /* 가끔 번쩍 — 핏빛 섬광 */
+  .hero-flash {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(circle at 65% 45%, rgba(192,57,43,0.18) 0%, transparent 55%);
+    opacity: 0;
+    animation: bloodFlash 11s ease-out infinite;
+  }
+
+  @keyframes bloodFlash {
+    0%, 100%   { opacity: 0; }
+    47%, 100%  { opacity: 0; }
+    48%        { opacity: 0.9; }
+    49%        { opacity: 0.1; }
+    50%        { opacity: 0.7; }
+    52%        { opacity: 0; }
+  }
+
+  /* 음절들이 흩어지고 깜빡이며, 단어 조합이 바뀌는 암호 같은 제목 */
+
+  /* 조합이 바뀌는 순간 — 흐릿하게 풀어졌다가 또렷해진다 */
+  .hero-title.morphing {
+    filter: blur(13px);
+    opacity: 0.18;
+  }
+
+  .ht-word {
+    display: flex;
+    white-space: nowrap;
+  }
+
+  /* 또렷이 풀려난 '정답' 상태일 때는 글자가 거의 멈추고 선명해진다 */
+  .hero-title.resolved .ht-char {
+    animation-duration: 6s, 9s;
+  }
+
+  .ht-char {
+    display: inline-block;
+    position: relative;
+    filter: blur(var(--blur, 0px));
+    will-change: transform, opacity;
+    animation:
+      charDrift var(--dur, 3s) ease-in-out var(--delay, 0s) infinite alternate,
+      charFlicker var(--fdur, 5s) steps(1, end) var(--fdelay, 0s) infinite;
+  }
+
+  /* 각 글자가 제자리를 못 찾고 미세하게 떠다닌다 */
+  @keyframes charDrift {
+    from {
+      transform: translate(calc(var(--tx) * -0.45), calc(var(--ty) * -0.45)) rotate(calc(var(--rot) * -0.6));
+    }
+    to {
+      transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+    }
+  }
+
+  /* 불규칙하게 깜빡 — 뭔가 숨겨진 듯 */
+  @keyframes charFlicker {
+    0%, 100% { opacity: 1; }
+    42%      { opacity: 1; }
+    43%      { opacity: 0.22; }
+    44%      { opacity: 1; }
+    73%      { opacity: 0.85; }
+    74%      { opacity: 0.3; }
+    75%      { opacity: 1; }
+    90%      { opacity: 0.6; }
+    91%      { opacity: 1; }
+  }
+
+  /* 움직임 최소화 설정 존중 */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fog, .hero-vignette, .hero-flash { animation: none; }
+    .ht-char { animation: none; filter: none; transform: none; }
+    .hero-title.morphing { filter: none; opacity: 1; }
+  }
+
+  /* SECTION COMMON */
+  section {
+    padding: 6rem 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.3em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .section-label::before {
+    content: '';
+    height: 1px;
+    width: 30px;
+    background: var(--red);
+    opacity: 0.6;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 3rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 700;
+  }
+
+  .about-text .highlight {
+    color: var(--red);
+    font-family: 'Noto Serif KR', serif;
+  }
+
+  .about-notices {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .notice-card {
+    padding: 1.2rem 1.5rem;
+    border-left: 2px solid var(--red);
+    background: rgba(192,57,43,0.06);
+  }
+
+  .notice-card h4 {
+    font-size: 0.8rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.6rem;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .notice-card p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+  }
+
+  /* PROGRAM TIMELINE */
+  .timeline {
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 90px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(192,57,43,0.25);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 0;
+    margin-bottom: 0;
+    position: relative;
+  }
+
+  .timeline-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    padding: 1.2rem 1.5rem 1.2rem 0;
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .timeline-body {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+  }
+
+  .timeline-body::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 1.3rem;
+    width: 9px;
+    height: 9px;
+    background: var(--black);
+    border: 1px solid var(--red);
+    border-radius: 50%;
+  }
+
+  .timeline-item.chapter .timeline-body::before {
+    background: var(--red);
+  }
+
+  .timeline-chapter {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.3rem;
+  }
+
+  .timeline-desc {
+    font-size: 0.82rem;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  .timeline-item.prologue .timeline-chapter,
+  .timeline-item.epilogue .timeline-chapter {
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  /* PARTICIPATION */
+  .participation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    margin-top: 3rem;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .participation-item {
+    background: var(--black);
+    padding: 1.8rem;
+  }
+
+  .participation-item label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--red);
+    letter-spacing: 0.25em;
+    display: block;
+    margin-bottom: 0.8rem;
+  }
+
+  .participation-item p {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+  }
+
+  .participation-item .big-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.8rem;
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ARCHIVE */
+  .archive-section {
+    background: var(--dark);
+    margin: 0;
+    max-width: 100%;
+    padding: 6rem 2rem;
+  }
+
+  .archive-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .archive-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .archive-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--mid);
+    cursor: pointer;
+  }
+
+  .archive-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.3s;
+    filter: grayscale(30%) brightness(0.7);
+  }
+
+  .archive-card:hover img {
+    transform: scale(1.05);
+    filter: grayscale(0%) brightness(0.85);
+  }
+
+  .archive-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.2rem;
+    transition: opacity 0.3s;
+  }
+
+  .archive-card-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.3rem;
+  }
+
+  .archive-card-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.9rem;
+    color: var(--white);
+    line-height: 1.4;
+  }
+
+  .archive-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.1);
+  }
+
+  .archive-card-placeholder span {
+    font-size: 2rem;
+  }
+
+  .archive-card-placeholder p {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+  }
+
+  .archive-note {
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* FORM SECTION */
+  .form-section {
+    background: var(--mid);
+    margin: 0;
+    max-width: 100%;
+    padding: 6rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .form-section::before {
+    content: '密';
+    position: absolute;
+    right: -2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20rem;
+    color: rgba(192,57,43,0.04);
+    font-family: 'Noto Serif KR', serif;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .form-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-intro {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .form-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1rem 1.2rem;
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.3);
+    margin-bottom: 2rem;
+  }
+
+  .form-warning p {
+    font-size: 0.8rem;
+    color: rgba(255,200,200,0.8);
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.6rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--white);
+    padding: 0.8rem 1rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: rgba(255,255,255,0.2);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(192,57,43,0.6);
+    background: rgba(192,57,43,0.04);
+  }
+
+  .form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .form-group select option {
+    background: #1a1a1a;
+    color: var(--white);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-submit-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .form-notice {
+    font-size: 0.75rem;
+    color: var(--gray);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* SUCCESS MESSAGE */
+  #success-msg {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+
+  #success-msg .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  #success-msg h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  #success-msg p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    line-height: 1.8;
+    margin-bottom: 0.5rem;
+  }
+
+  #success-msg .kakao-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.8rem 2rem;
+    background: #FEE500;
+    color: #191919;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  #success-msg .kakao-link:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem 2rem;
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-address {
+    font-size: 0.75rem;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+
+  .footer-right {
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* LOADER / SPINNER */
+  #submit-btn.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* FULL CAPACITY NOTICE */
+  .capacity-notice {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--gray);
+    letter-spacing: 0.1em;
+    display: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    nav { padding: 1rem; }
+    .nav-links { gap: 1rem; }
+    .hero { padding: 5rem 1.2rem 3rem; }
+    section { padding: 4rem 1.2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .archive-grid { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-submit-wrap { flex-direction: column; align-items: stretch; }
+    .timeline::before { left: 70px; }
+    .timeline-item { grid-template-columns: 70px 1fr; }
+    .timeline-time { font-size: 0.6rem; }
+    .footer-inner { flex-direction: column; }
+    .footer-right { text-align: left; }
+  }
+
+  @media (max-width: 480px) {
+    .archive-grid { grid-template-columns: 1fr; }
+    .participation-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* FADE IN ANIMATION */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">b.am 密 on</a>
+  <ul class="nav-links">
+    <li><a href="#about">소개</a></li>
+    <li><a href="#program">프로그램</a></li>
+    <li><a href="#archive">5월 아카이브</a></li>
+    <li><a href="#apply">신청하기</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bookshelf"></div>
+  <div class="hero-fog"></div>
+  <div class="hero-flash"></div>
+  <div class="hero-vignette"></div>
+  <div class="hero-content fade-in">
+    <p class="episode-tag">b.am on — EP.2 추·미·스의 밤</p>
+    <h1 class="hero-title" id="hero-title" aria-label="밤이 밀려 온다"></h1>
+    <p class="hero-subtitle">추리<span>·</span>미스터리<span>·</span>스릴러</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <label>DATE</label>
+        <p>2026.6.12.(금) 23:00<br>→ 6.13.(토) 06:00</p>
+      </div>
+      <div class="meta-item">
+        <label>VENUE</label>
+        <p>비북스<br>원미동 88-1 B2호</p>
+      </div>
+      <div class="meta-item">
+        <label>CAPACITY</label>
+        <p>10명 (선착순)</p>
+      </div>
+      <div class="meta-item">
+        <label>FEE</label>
+        <p>₩20,000<br><span style="font-size:0.75rem;color:var(--gray)">침낭+야식+3천원 쿠폰 포함</span></p>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="#apply" class="btn-primary">신청하기</a>
+      <a href="#program" class="btn-secondary">프로그램 보기</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>scroll</span>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label fade-in">밤밀온이란</p>
+  <h2 class="section-title fade-in">아무도 잠들지 않았다</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>밤밀온이 두 번째 밤을 맞습니다.</p>
+      <p>이번 밤의 테마는 <span class="highlight">추·미·스</span>. 추리, 미스터리, 스릴러.</p>
+      <p>누군가는 책 속 사건을 따라가고, 누군가는 좋아하는 장르 이야기를 꺼내고, 또 누군가는 함께 게임을 하며 새벽을 맞이할지도 모르겠습니다.</p>
+      <p>정답을 찾기 위한 밤은 아니지만, <strong>추·미·스를 좋아하는 사람들끼리 모여 조금 수상하고, 조금 새롭고, 꽤 즐거운 시간</strong>을 보내려 합니다.</p>
+      <p>잠들지 않는 서점 비북스에서, 함께 밀도 높은 밤을 보내 보아요.</p>
+    </div>
+    <div class="about-notices">
+      <div class="notice-card">
+        <h4>밤밀온 안내</h4>
+        <p>기본 프로그램은 있지만, 자신만의 방식으로 밤을 보내도 괜찮아요. 독서를 계속하거나, 조용히 개인 활동 모두 OK입니다.</p>
+      </div>
+      <div class="notice-card">
+        <h4>도서 이용</h4>
+        <p>비북스 내의 모든 책은 마음껏 읽으실 수 있으나, 「0.1평서점」의 책들은 소중히 읽어주세요.</p>
+      </div>
+      <div class="notice-card">
+        <h4>북(book)-잠</h4>
+        <p>책 향기를 맡으며 스르르 잠들고 싶다면, 침낭에서 부~~욱 자도 됩니다. 입장 시 리클라이너의자, 계단쪽 나무 바닥 등 높거나 앉을 자리를 선택하시면 됩니다. (선착순)</p>
+      </div>
+      <div class="notice-card">
+        <h4>주차</h4>
+        <p>건물 앞 혹은 원미구청 무료 주차 가능 (주말 기준)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROGRAM -->
+<section id="program">
+  <p class="section-label fade-in">타임라인</p>
+  <h2 class="section-title fade-in">그리고, 아무도 잠들지 않았다</h2>
+
+  <div class="timeline fade-in">
+    <div class="timeline-item prologue">
+      <div class="timeline-time">p.23:30</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">prologue. 긴장의 밤: 낯선 책방</p>
+        <p class="timeline-desc">『밤밀온』 입실 및 자리잡기</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">23:00–23:30</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">1장. [ ] 명의 용의자</p>
+        <p class="timeline-desc">『밤밀온』 EP2. 추·미·스의밤 소개 / 자기소개</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">23:30–01:10</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">2장. 사라진 문장</p>
+        <p class="timeline-desc">몰입독서 100분 — 각자 읽고 싶은 책 읽기</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">01:10–01:40</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">3장. 진술의 시간</p>
+        <p class="timeline-desc">차와 함께 읽은 책 소개 및 소감나누기</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-time">01:40–01:50</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">4장. 수상한 기척</p>
+        <p class="timeline-desc">자유롭게 휴식 & 잠 깨기</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">01:50–04:00</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">5-A 기록된 진실</p>
+        <p class="timeline-desc">기록영상 분석(130분) — 영상 시청 후 소감나누기</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">04:00–05:00</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">5-B 밀실의 밤</p>
+        <p class="timeline-desc">심리실험(60분) — 보드게임</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">05:00–05:20</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">6장. 결정적 단서</p>
+        <p class="timeline-desc">범인찾기</p>
+      </div>
+    </div>
+    <div class="timeline-item chapter">
+      <div class="timeline-time">05:20–05:45</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">7장. 새벽의 증언</p>
+        <p class="timeline-desc">소감 나누기</p>
+      </div>
+    </div>
+    <div class="timeline-item epilogue">
+      <div class="timeline-time">05:45–06:00</div>
+      <div class="timeline-body">
+        <p class="timeline-chapter">epilogue. 끝나지 않은 밤</p>
+        <p class="timeline-desc">마무리 / 퇴실</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PARTICIPATION INFO -->
+<section>
+  <div class="participation-grid fade-in">
+    <div class="participation-item">
+      <label>참가비</label>
+      <p class="big-num">₩20,000</p>
+      <p style="margin-top:0.5rem;font-size:0.78rem">침낭 + 야식 + 비북스 3천원 적립쿠폰</p>
+    </div>
+    <div class="participation-item">
+      <label>정원</label>
+      <p class="big-num">10명</p>
+      <p style="margin-top:0.5rem;font-size:0.78rem">선착순 마감</p>
+    </div>
+    <div class="participation-item">
+      <label>장소</label>
+      <p style="font-size:0.88rem">비북스<br>원미동 88-1 B2호</p>
+    </div>
+    <div class="participation-item">
+      <label>문의</label>
+      <p style="font-size:0.85rem">써든리 매니저<br>인스타 DM 또는<br>0507-1353-4850</p>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHIVE -->
+<div class="archive-section" id="archive">
+  <div class="archive-inner">
+    <p class="section-label fade-in">아카이브</p>
+    <h2 class="section-title fade-in">5월의 밤을 기억하며</h2>
+    <p style="font-size:0.85rem;color:var(--gray);margin-top:0.8rem;margin-bottom:0" class="fade-in">밤밀온 EP.1 — 첫 번째 밤의 기록</p>
+
+    <div class="archive-grid fade-in">
+      <div class="archive-card">
+        <img src="assets/archive/ep1-01.png" alt="등불 아래 원미동 사람들">
+        <div class="archive-card-overlay">
+          <p class="archive-card-date">2026.05 — EP.1</p>
+          <p class="archive-card-title">등불 아래, 『원미동 사람들』</p>
+        </div>
+      </div>
+      <div class="archive-card">
+        <img src="assets/archive/ep1-02.png" alt="서가 사이 독서">
+        <div class="archive-card-overlay">
+          <p class="archive-card-date">2026.05 — EP.1</p>
+          <p class="archive-card-title">빛 한 줄, 혼자 읽는 밤</p>
+        </div>
+      </div>
+      <div class="archive-card">
+        <img src="assets/archive/ep1-03.png" alt="리클라이너에서 북잠">
+        <div class="archive-card-overlay">
+          <p class="archive-card-date">2026.05 — EP.1</p>
+          <p class="archive-card-title">리클라이너에서 북(book)-잠</p>
+        </div>
+      </div>
+      <div class="archive-card">
+        <img src="assets/archive/ep1-04.png" alt="밤이 밀려온다 포스터">
+        <div class="archive-card-overlay">
+          <p class="archive-card-date">2026.05 — EP.1</p>
+          <p class="archive-card-title">밤이 밀려온다 — 첫 포스터</p>
+        </div>
+      </div>
+      <div class="archive-card">
+        <img src="assets/archive/ep1-05.png" alt="틈 너머 독서">
+        <div class="archive-card-overlay">
+          <p class="archive-card-date">2026.05 — EP.1</p>
+          <p class="archive-card-title">틈 너머, 조용한 독서</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY FORM -->
+<div class="form-section" id="apply">
+  <div class="form-inner">
+    <p class="section-label fade-in">신청하기</p>
+    <h2 class="section-title fade-in">이 밤에 합류하세요</h2>
+
+    <div class="fade-in">
+      <p class="form-intro">
+        선착순 10명 마감입니다. 신청 후 입력하신 연락처로 참가 안내를 드립니다.<br>
+        참가비(₩20,000)는 신청 확인 후 안내드리는 계좌로 입금해 주세요.
+      </p>
+
+      <div class="form-warning">
+        <p>⚠️ 정원(10명) 초과 시 대기 명단에 등록되며, 취소자 발생 시 순서대로 연락드립니다.</p>
+      </div>
+
+      <form id="apply-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>이름 *</label>
+            <input type="text" id="name" placeholder="홍길동" required>
+          </div>
+          <div class="form-group">
+            <label>연락처 *</label>
+            <input type="tel" id="phone" placeholder="010-0000-0000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>주로 읽는 추·미·스 장르 *</label>
+          <select id="genre" required>
+            <option value="" disabled selected>선택해주세요</option>
+            <option value="추리소설">추리소설</option>
+            <option value="미스터리">미스터리</option>
+            <option value="스릴러">스릴러</option>
+            <option value="범죄소설">범죄소설</option>
+            <option value="공포/호러">공포/호러</option>
+            <option value="혼합">혼합 (다 좋아요)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>최근 읽은 추·미·스 책 (선택)</label>
+          <input type="text" id="recent-book" placeholder="제목을 알려주세요">
+        </div>
+
+        <div class="form-group">
+          <label>하고 싶은 말 또는 궁금한 점 (선택)</label>
+          <textarea id="message" placeholder="자유롭게 적어주세요"></textarea>
+        </div>
+
+        <div class="form-submit-wrap">
+          <p class="form-notice">
+            문의: 써든리 매니저<br>
+            인스타 DM 또는 0507-1353-4850
+          </p>
+          <button type="submit" class="btn-primary" id="submit-btn">신청 완료하기</button>
+        </div>
+      </form>
+
+      <div id="success-msg">
+        <div class="success-icon">🔍</div>
+        <h3>신청이 완료되었습니다.</h3>
+        <p>입력하신 연락처로 참가 안내를 드리겠습니다.</p>
+        <p>참가비(₩20,000)는 안내드리는 계좌번호로 입금해 주세요.</p>
+        <p style="color:var(--red);margin-top:1rem">비북스 카카오채널을 팔로우하면<br>더 빠르게 소식을 받아볼 수 있어요!</p>
+        <a href="https://pf.kakao.com/_xxxxxG" target="_blank" class="kakao-link">
+          🟡 비북스 카카오채널 팔로우하기
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand">b.am 密 on — 밤밀온</p>
+      <p class="footer-address">
+        비북스 (b.booKS)<br>
+        경기도 부천시 원미동 88-1 B2호<br>
+        문의: 0507-1353-4850
+      </p>
+    </div>
+    <div class="footer-right">
+      <p>EP.2 추·미·스의 밤</p>
+      <p>2026.6.12.(금) 23:00 → 6.13.(토) 06:00</p>
+      <p style="margin-top:0.8rem;color:rgba(255,255,255,0.1)">b.booKS × 밤밀온</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ====== CIPHER TITLE — 흩어지고 깜빡이며 조합이 바뀌는 제목 ====== */
+(function () {
+  const TITLE = document.getElementById('hero-title');
+  if (!TITLE) return;
+
+  // 6개의 음절을 다양한 단어 조합으로 재배열한다 — 추리하듯 의미를 떠올리게
+  const CANONICAL = [['밤', '이'], ['밀', '려'], ['온', '다']];
+  const SCRAMBLES = [
+    [['이', '밤'], ['온', '다'], ['밀', '려']],
+    [['밀', '려', '온', '다'], ['이', '밤']],
+    [['온', '다'], ['밤', '이'], ['밀', '려']],
+    [['다', '온'], ['밤', '이'], ['밀', '려']],
+    [['이', '밀', '려'], ['밤'], ['온', '다']],
+    [['밤', '밀'], ['려', '온'], ['다', '이']],
+  ];
+
+  const rand = (min, max) => Math.random() * (max - min) + min;
+
+  function render(words, resolved) {
+    TITLE.innerHTML = '';
+    words.forEach((word) => {
+      const w = document.createElement('span');
+      w.className = 'ht-word';
+      word.forEach((ch) => {
+        const c = document.createElement('span');
+        c.className = 'ht-char';
+        c.textContent = ch;
+        const spread = resolved ? 2.5 : 20;
+        c.style.setProperty('--tx', rand(-spread, spread).toFixed(1) + 'px');
+        c.style.setProperty('--ty', rand(-spread * 0.7, spread * 0.7).toFixed(1) + 'px');
+        c.style.setProperty('--rot', rand(resolved ? -1 : -9, resolved ? 1 : 9).toFixed(1) + 'deg');
+        c.style.setProperty('--dur', rand(2.4, 5).toFixed(2) + 's');
+        c.style.setProperty('--delay', rand(-5, 0).toFixed(2) + 's');
+        c.style.setProperty('--fdur', rand(3, 7).toFixed(2) + 's');
+        c.style.setProperty('--fdelay', rand(-6, 0).toFixed(2) + 's');
+        // 흐릿함 — 또렷한 정답 상태에서는 0, 흩어진 상태에서는 자세히 봐야 보이게
+        c.style.setProperty('--blur', (resolved ? 0 : rand(1.2, 3.2)).toFixed(2) + 'px');
+        w.appendChild(c);
+      });
+      TITLE.appendChild(w);
+    });
+    TITLE.classList.toggle('resolved', !!resolved);
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) {
+    render(CANONICAL, true);
+    return;
+  }
+
+  let idx = 0;
+  function swap(words, resolved) {
+    TITLE.classList.add('morphing');
+    setTimeout(() => {
+      render(words, resolved);
+      TITLE.classList.remove('morphing');
+    }, 480);
+  }
+
+  function loop() {
+    // 흩어진 조합을 흐릿하게 보여준다 (추리 유도)
+    swap(SCRAMBLES[idx % SCRAMBLES.length], false);
+    idx++;
+    // 잠시 후 진짜 문장으로 또렷하게 풀려난다
+    setTimeout(() => {
+      swap(CANONICAL, true);
+      setTimeout(loop, 3200); // 정답을 충분히 음미할 시간
+    }, 2900);
+  }
+
+  render(CANONICAL, true);
+  setTimeout(loop, 2600);
+})();
+
+/* ====== FADE IN OBSERVER ====== */
+const fadeEls = document.querySelectorAll('.fade-in');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+fadeEls.forEach(el => observer.observe(el));
+
+/* ====== GOOGLE SHEETS SUBMIT ====== */
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycby2sptX_0RjDleLa533c8zBYocBaiwLTBBTRLS7_Fpxe1lYV-30fS7mveuBXzJw0d8fCQ/exec';
+
+document.getElementById('apply-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = '제출 중...';
+  btn.classList.add('loading');
+
+  const data = {
+    timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    genre: document.getElementById('genre').value,
+    recentBook: document.getElementById('recent-book').value,
+    message: document.getElementById('message').value,
+  };
+
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    document.getElementById('apply-form').style.display = 'none';
+    document.getElementById('success-msg').style.display = 'block';
+
+  } catch (err) {
+    console.error(err);
+    alert('제출 중 오류가 발생했습니다. 인스타 DM 또는 0507-1353-4850으로 연락해 주세요.');
+    btn.textContent = '신청 완료하기';
+    btn.classList.remove('loading');
+  }
+});
+</script>
+
+</body>
+</html>
