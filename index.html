@@ -803,6 +803,36 @@
     letter-spacing: 0.05em;
   }
 
+  .form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+    cursor: pointer;
+  }
+
+  .form-check input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.15rem;
+    accent-color: var(--red);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .form-check label {
+    font-size: 0.9rem;
+    color: var(--light-gray);
+    line-height: 1.5;
+    cursor: pointer;
+    letter-spacing: 0;
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+
   .form-group input,
   .form-group select,
   .form-group textarea {
@@ -1276,23 +1306,18 @@
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>회비 입금 확인 *</label>
-            <select id="payment-status" required>
-              <option value="" disabled selected>선택해주세요</option>
-              <option value="입금 완료">입금 완료</option>
-              <option value="입금 예정">입금 예정 (신청 후 입금)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>입금자명 *</label>
-            <input type="text" id="depositor-name" placeholder="홍길동(밤밀온)" required>
-          </div>
+        <div class="form-group">
+          <label>입금자명 *</label>
+          <input type="text" id="depositor-name" placeholder="홍길동(밤밀온)" required>
         </div>
-        <p class="form-hint" style="margin-top:-0.5rem;margin-bottom:1.5rem">
+        <p class="form-hint" style="margin-top:-0.5rem;margin-bottom:1rem">
           입금 시 입금자명에 <strong>(밤밀온)</strong>을 붙여 주세요. 예: 홍길동(밤밀온)
         </p>
+
+        <label class="form-check" for="payment-confirmed">
+          <input type="checkbox" id="payment-confirmed" required>
+          <span>회비(₩20,000)를 입금했습니다 *</span>
+        </label>
 
         <div class="form-group">
           <label>주로 읽는 추·미·스 장르 *</label>
@@ -1462,7 +1487,7 @@ document.getElementById('apply-form').addEventListener('submit', async function(
     timestamp: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
     name: document.getElementById('name').value,
     phone: document.getElementById('phone').value,
-    paymentStatus: document.getElementById('payment-status').value,
+    paymentStatus: document.getElementById('payment-confirmed').checked ? '입금했습니다' : '',
     depositorName: document.getElementById('depositor-name').value,
     genre: document.getElementById('genre').value,
     recentBook: document.getElementById('recent-book').value,
